@@ -6,7 +6,7 @@
 name: Ayman Boustati
 
 # Short bio or description (displayed in the header)
-description: MSc student at the Mathematice for Real-World Systems CDT 
+description: MSc student at the Mathematics for Real-World Systems CDT 
 
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: https://raw.githubusercontent.com/barryclark/jekyll-now/master/images/jekyll-logo.png
@@ -25,7 +25,7 @@ footer-links:
   instagram:
   linkedin:
   pinterest:
-  rss: # just type anything here for a working RSS icon
+  rss: rss # just type anything here for a working RSS icon
   twitter: AymanBoustati
   stackoverflow: # your stackoverflow profile, e.g. "users/50476/bart-kiers"
   youtube: # channel/<your_long_string> or user/<user-name>

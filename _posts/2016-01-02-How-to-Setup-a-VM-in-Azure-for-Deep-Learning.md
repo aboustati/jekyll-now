@@ -34,6 +34,7 @@ sudo apt-get upgrade
 ```
 
 Next, we download the CUDA Toolkit 8.0 installer from the NVIDIA website.
+
 ```
 #Navigate to the home directory
 cd ~
@@ -46,7 +47,9 @@ wget "https://developer.nvidia.com/compute/cuda/8.0/prod/local_installers/cuda-r
 #Rename the downloaded file to end with a .deb extension
 mv cuda-repo-ubuntu1604-8-0-local_8.0.44-1_amd64-deb cuda-repo-ubuntu1604-8-0-local_8.0.44-1_amd64.deb
 ```
+
 Now we can install the CUDA software package.
+
 ```
 #Install CUDA from deb package
 sudo dpkg -i "cuda-repo-ubuntu1604-8-0-local_8.0.44-1_amd64.deb"
@@ -55,7 +58,9 @@ sudo apt-get update
 #Install dependencies for CUDA
 sudo apt-get install cuda
 ```
+
 Finally we need to create a couple of environment variables and append our path. To do this, we append the `.bashrc` file in the home directory.
+
 ```
 #Navigate to the home directory
 cd ~
@@ -63,7 +68,9 @@ cd ~
 #You can use nano or emacs or any other editor you prefer
 vim .bashrc
 ```
+
 Append the `.bashrc` file with the following:
+
 ```
 #Define CUDA_HOME environment variable
 export CUDA_HOME=/usr/local/cuda-8.0 
@@ -72,11 +79,14 @@ export LD_LIBRARY_PATH=${CUDA_HOME}/lib64
 #Add CUDA_HOME to PATH
 export PATH=${CUDA_HOME}/bin:${PATH}
 ```
+
 Finally, we need to apply the changes to the `.bashrc` file by executing its contents.
+
 ```
 #Execute bashrc
 source .bashrc
 ```
+
 And viola! Now - fingers crossed - CUDA should be installed.
 
 ## Step 3: Installing CuDNN
@@ -91,6 +101,7 @@ After you pick the required version, you will be presented with multiple downloa
 ![](https://i.imgur.com/Zmhyl8R.png)
 
 Assuming that the file was copied to the Downloads directory on the VM, we begin by extracting the library from the tar file and moving it into a different repository.
+
 ```
 #Navigate to Downloads
 cd ~/Downloads
@@ -99,13 +110,16 @@ tar xvzf cudnn-8.0-linux-x64-v5.1.tgz
 #Move the library to /usr/local
 sudo mv cuda /usr/local/cudnn
 ```
+
 We then create symbolic links to the header files of the library. We place the links in the CUDA directory.
+
 ```
 #Create symlink to cudnn.h in cuda/include
 sudo ln -s /usr/local/cudnn/include/cudnn.h /usr/local/cuda/include/cudnn.h
 #Create symlink to shared libraries
 sudo ln -s /usr/local/cudnn/lib64/libcudnn* /usr/local/cuda/lib64/
 ```
+
 And we are done! CuDNN should now be working when called in Theano.
 
 ## Step 4: Installing and Configuring Theano
@@ -114,6 +128,7 @@ Now that we set up CUDA and CuDNN, we need to install Theano. Theano is a Python
 When using Python for scientific computing or data science, I prefer to use the Anaconda distribution of Python. Using Anaconda Python for these tasks has [many advantages](https://www.reddit.com/r/Python/comments/3t23vv/what_advantages_are_there_of_using_anaconda/) over using the system Python. The Anaconda distribution is accompanied with the `conda` package management system, which makes installing new Python libraries virtually hassle-free, as it is able to deal with dependencies. Hence, I will explain how to install Anaconda on your VM and how to use it to install Theano.
 
 First off, we start by downloading then running the Anaconda installer.
+
 ```
 #Navigate to Downloads
 cd ~/Downloads
@@ -126,7 +141,9 @@ cd ~
 #Execute .bashrc
 source .bashrc
 ```
+
 During the installation process, you will be presented with an option at the end to append you `.bashrc` file to add Anaconda to your path. **You should agree on this**. The above process should install Anaconda; however, since we used `sudo` during the installation, only `root` is allowed to change the contents of the `ancaconda3` directory. This is problematic if we need to use `conda` to install new packages. Hence, we need to change the ownership of the `anaconda3` directory to allow the user i.e. you, to modify its contents. We can do this as follows:
+
 ```
 #Navigate to the home directory
 cd ~
@@ -134,21 +151,27 @@ cd ~
 #[user] is your username!
 sudo chown -R [user] anaconda3
 ``` 
+
 This completes the Anaconda installation. Now we can use `conda` to install Theano.
+
 ```
 #Install Theano 
 conda install theano
 ```
+
 `conda` will take care to install and configure all the dependencies required to setup Theano.
 
 Having installed Theano, we need to configure it to allow it to use the GPU to speed up computation. In the home directory, we create a configuration file for Theano `.theanorc` and add some attributes to it.
+
 ```
 #Navigate to home directory
 cd ~
 #Create and edit theanorc using vim
 vim .theanorc
 ```
+
 Add the following to `.theanorc`.
+
 ```
 [global]
 floatX = float32
@@ -157,7 +180,9 @@ device = gpu0
 [lib]
 cnmem = 1
 ```
+
 Finally, to check that everything is running correctly, run the following script in Python.
+
 ```python
 from theano import function, config, shared, sandbox
 import theano.tensor as T
@@ -182,27 +207,35 @@ if numpy.any([isinstance(x.op, T.Elemwise) for x in f.maker.fgraph.toposort()]):
 else:
     print('Used the gpu')
 ```
+
 If the script prints "Used the gpu", then you know that CUDA and Theano has been configured correctly.
 
 # Step 4: Installing and Configuring Keras
 Keras is a Python library for neural networks that is built on top of Theano or Tensorflow. Keras allows for fast and easy prototyping of various neural network architectures via its modular design. More information about Keras [here](https://keras.io/). Keras is available as part of the Anaconda distribution. All you need to do is installing it using `conda`.
+
 ```
 #Install Keras
 conda install keras
 ```
+
 This will install Keras and all its dependencies. By default, Keras ships with a Tensorflow backend, i.e. it uses Tensorflow to build the computational graphs of the neural networks. Hence, we need to change the backend to Theano as we have already configured it to use the GPU. To do this, we first need to run Keras once to generate its configuration files.
+
 ```
 #Run Keras once
 python -c "import keras"
 ```
+
 Running Keras for the first time generates its configuration files which are located in the `.keras` directory in home. Inside this directory, you will find a file called `keras.json` which contains Keras configurations, among which is the backend of choice.
+
 ```
 #Navigate to .keras directory
 cd ~/.keras
 #Open keras.json using vim
 vim keras.json
 ```
+
 Change the configurations inside `keras.json` to the following:
+
 ```
 {
     "image_dim_ordering": "th",
@@ -211,6 +244,7 @@ Change the configurations inside `keras.json` to the following:
     "backend": "theano"
 }
 ```
+
 Now whenever Keras is imported, the statement "Using Theano backend" should be printed. This tells us that Keras is using the Theano backend.
 
 ## Summary

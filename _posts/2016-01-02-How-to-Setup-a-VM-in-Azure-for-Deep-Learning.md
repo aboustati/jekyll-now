@@ -156,7 +156,7 @@ device = gpu0
 cnmem = 1
 ```
 Finally, to check that everything is running correctly, run the following script in Python.
-```python
+```{Python}
 from theano import function, config, shared, sandbox
 import theano.tensor as T
 import numpy

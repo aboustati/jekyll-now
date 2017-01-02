@@ -1,4 +1,5 @@
-﻿---
+﻿
+---
 layout: post
 title: How to Setup a VM in Azure for Deep Learning?
 ---

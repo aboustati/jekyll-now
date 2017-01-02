@@ -23,6 +23,7 @@ I will not go through all the details of spinning up a VM on Azure as there is a
 
 ## Step 2: Installing CUDA Toolkit 8.0
 Having setup a VM with GPU support on Azure, we now need to install the CUDA Toolkit to enable using the GPU for computational tasks (More on CUDA [here](http://www.nvidia.com/object/cuda_home_new.html)). We start off by logging into the new VM using `ssh` (for Linux or MacOS users) or `PuTTY` (for Windows users). Once inside the VM, we install some useful packages and make sure that all our packages are up-to-date.
+
 ```
 #Update software repository
 sudo apt-get update
@@ -31,6 +32,7 @@ sudo apt-get install -y libatlas-base-dev libopencv-dev libprotoc-dev python-num
 #Upgrade all remaining packages
 sudo apt-get upgrade
 ```
+
 Next, we download the CUDA Toolkit 8.0 installer from the NVIDIA website.
 ```
 #Navigate to the home directory

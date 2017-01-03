@@ -87,7 +87,7 @@ Finally, we need to apply the changes to the `.bashrc` file by executing its con
 source .bashrc
 ```
 
-And viola! Now - fingers crossed - CUDA should be installed.
+And voila! Now - fingers crossed - CUDA should be installed.
 
 ## Step 3: Installing CuDNN
 After installing CUDA, we now need to install the CuDNN (CUDA Deep Neural Networks) library. CuDNN is a GPU-accelerated library of primitives for deep neural networks used in frameworks like Tensorflow and Theano (More information [here](https://developer.nvidia.com/cudnn)). Since CuDNN is a proprietary library, you need to register for the NVIDIA Developer programme to be allowed to download it. Registration is free and all you need is an email address. You can register [here](https://developer.nvidia.com/cudnn). 
